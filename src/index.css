@@ -140,6 +140,29 @@
             @apply text-gray-100 font-medium text-base;
         }
     }
+
+    /* Pagination Container */
+    .pagination {
+        @apply flex justify-center items-center gap-4 mt-10;
+    }
+
+    /* Pagination Buttons */
+    .pagination-button {
+        @apply bg-light-100/10 px-6 py-2 rounded-lg text-light-200 font-medium text-base transition-all duration-200;
+    }
+
+    .pagination-button:hover:not(:disabled) {
+        @apply bg-light-100/20 text-light-100;
+    }
+
+    .pagination-button:disabled {
+        @apply bg-light-100/5 text-gray-100 cursor-not-allowed;
+    }
+
+    /* Page Number Text */
+    .page-number {
+        @apply text-gray-100 font-medium text-base;
+    }
 }
 
 @utility text-gradient {
