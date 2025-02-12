@@ -21,21 +21,23 @@ const App = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [movieList, setMovieList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [debounceSearchTerm, setDebounceSearchTerm] = useState('')
+    const [debounceSearchTerm, setDebounceSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
 
     //debounce the search to optimize the API Call
     useDebounce( () => setDebounceSearchTerm(searchTerm), 500, [searchTerm]);
 
     //fetching movie data from api
-    const fetchMovies = async ( query = '') => {
+    const fetchMovies = async ( query = '', page = 1) => {
         setIsLoading(true);
         setErrorMessage('');
 
         try {
             const endpoint = query
-                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`
+                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${page}`;
             const response = await fetch(endpoint, API_OPTIONS);
 
             if(!response.ok) {
@@ -43,13 +45,15 @@ const App = () => {
             }
             const data = await response.json();
 
-            if(data.response === false) {
+            if(data.Response === false) {
                 setErrorMessage('Could not fetch movies');
                 setMovieList([]);
                 return;
             }
 
+            // Update movie list and total pages
             setMovieList(data.results);
+            setTotalPages(data.total_pages); // Set total pages from API response
 
         }catch (error) {
             console.log(`Error fetching movies: ${error}`);
@@ -62,8 +66,8 @@ const App = () => {
 
 
     useEffect(() => {
-        fetchMovies(debounceSearchTerm);
-    }, [debounceSearchTerm]);
+        fetchMovies(debounceSearchTerm, page);
+    }, [debounceSearchTerm, page]);
 
 
 
@@ -95,6 +99,32 @@ const App = () => {
                             ))}
                         </ul>
                     )}
+
+                    <div className="pagination">
+                        <button
+                            onClick={ () => {
+                                if(page > 1) {
+                                    setPage( prev => prev - 1);
+                                }
+                            }}
+                            disabled={page === 1 || isLoading}
+                            className="pagination-button"
+                        >
+                            Previous
+                        </button>
+                        <span className="page-number">Page {page} of {totalPages}</span>
+                        <button
+                            onClick={ () => {
+                                if(page < totalPages) {
+                                    setPage( prev => prev + 1);
+                                }
+                            }}
+                            disabled={page === totalPages || isLoading}
+                            className="pagination-button"
+                        >
+                            Next
+                        </button>
+                    </div>
                 </section>
             </div>
         </main>
