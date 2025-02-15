@@ -100,7 +100,7 @@ const MovieDetailsPage = () => {
         <div className="movie-details p-8 bg-dark-100 text-white">
             {/* Back Button */}
             <button onClick={() => navigate(-1)} className="mb-8 px-4 py-2 bg-light-100/10 text-light-200 rounded-lg">
-                Back to Home
+                Back
             </button>
 
             {/* Movie Header */}

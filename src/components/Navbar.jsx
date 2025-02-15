@@ -54,7 +54,7 @@ const Navbar = () => {
 
                  {/*User Options */}
                 <div className="flex gap-4 mt-4 md:mt-0">
-                    <Link to="/signin" className="text-light-200 hover:text-light-100">
+                    <Link to="/login" className="text-light-200 hover:text-light-100">
                         Sign In
                     </Link>
                     <Link to="/register" className="text-light-200 hover:text-light-100">
