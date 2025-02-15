@@ -12,46 +12,46 @@ const API_OPTIONS = {
     }
 };
 
-const MovieDetailsPage = () => {
+const TVShowDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [movie, setMovie] = useState(null);
+    const [tvShow, setTVShow] = useState(null);
     const [credits, setCredits] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
-    const [similarMovies, setSimilarMovies] = useState([]);
+    const [similarTVShows, setSimilarTVShows] = useState([]);
     const [trailerKey, setTrailerKey] = useState(null); // State to store the YouTube trailer key
 
-    const fetchMovieDetails = async () => {
+    const fetchTVShowDetails = async () => {
         setIsLoading(true);
         setError('');
 
         try {
-            // Fetch movie details
-            const movieResponse = await fetch(`${API_BASE_URL}/movie/${id}`, API_OPTIONS);
-            if (!movieResponse.ok) {
-                throw new Error("Could not fetch movie details");
+            // Fetch TV show details
+            const tvShowResponse = await fetch(`${API_BASE_URL}/tv/${id}`, API_OPTIONS);
+            if (!tvShowResponse.ok) {
+                throw new Error("Could not fetch TV show details");
             }
-            const movieData = await movieResponse.json();
+            const tvShowData = await tvShowResponse.json();
 
-            // Fetch movie credits
-            const creditsResponse = await fetch(`${API_BASE_URL}/movie/${id}/credits`, API_OPTIONS);
+            // Fetch TV show credits
+            const creditsResponse = await fetch(`${API_BASE_URL}/tv/${id}/credits`, API_OPTIONS);
             if (!creditsResponse.ok) {
-                throw new Error("Could not fetch movie credits");
+                throw new Error("Could not fetch TV show credits");
             }
             const creditsData = await creditsResponse.json();
 
-            // Fetch similar movies
-            const similarResponse = await fetch(`${API_BASE_URL}/movie/${id}/similar`, API_OPTIONS);
+            // Fetch similar TV shows
+            const similarResponse = await fetch(`${API_BASE_URL}/tv/${id}/similar`, API_OPTIONS);
             if (!similarResponse.ok) {
-                throw new Error("Could not fetch similar movies");
+                throw new Error("Could not fetch similar TV shows");
             }
             const similarData = await similarResponse.json();
 
-            // Fetch movie videos (trailers)
-            const videosResponse = await fetch(`${API_BASE_URL}/movie/${id}/videos`, API_OPTIONS);
+            // Fetch TV show videos (trailers)
+            const videosResponse = await fetch(`${API_BASE_URL}/tv/${id}/videos`, API_OPTIONS);
             if (!videosResponse.ok) {
-                throw new Error("Could not fetch movie videos");
+                throw new Error("Could not fetch TV show videos");
             }
             const videosData = await videosResponse.json();
 
@@ -60,25 +60,25 @@ const MovieDetailsPage = () => {
                 (video) => video.type === "Trailer" && video.site === "YouTube"
             );
 
-            setMovie(movieData);
+            setTVShow(tvShowData);
             setCredits(creditsData);
-            setSimilarMovies(similarData.results);
+            setSimilarTVShows(similarData.results);
             setTrailerKey(trailer?.key); // Set the YouTube trailer key (if found)
         } catch (error) {
-            console.log(`Error fetching movie details: ${error}`);
-            setError('Could not fetch movie details. Please try again later.');
+            console.log(`Error fetching TV show details: ${error}`);
+            setError('Could not fetch TV show details. Please try again later.');
         } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchMovieDetails();
+        fetchTVShowDetails();
     }, [id]);
 
-    // Function to handle clicking on a similar movie
-    const handleSimilarMovieClick = (movieId) => {
-        navigate(`/movie/${movieId}`);
+    // Function to handle clicking on a similar TV show
+    const handleSimilarTVShowClick = (tvShowId) => {
+        navigate(`/tv/${tvShowId}`);
     };
 
     if (isLoading) {
@@ -93,37 +93,38 @@ const MovieDetailsPage = () => {
         return <div className="text-red-500">{error}</div>;
     }
 
-    // Get the director from the credits
-    const director = credits.crew.find((member) => member.job === 'Director');
+    // Get the creator(s) from the credits
+    const creators = credits.crew.filter((member) => member.job === 'Creator');
 
     return (
-        <div className="movie-details p-8 bg-dark-100 text-white">
+        <div className="tvshow-details p-8 bg-dark-100 text-white">
             {/* Back Button */}
             <button onClick={() => navigate(-1)} className="mb-8 px-4 py-2 bg-light-100/10 text-light-200 rounded-lg">
-                Back to Home
+                Back
             </button>
 
-            {/* Movie Header */}
+            {/* TV Show Header */}
             <div className="flex flex-col md:flex-row gap-8">
                 {/* Poster */}
                 <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    alt={movie.title}
+                    src={`https://image.tmdb.org/t/p/w500${tvShow.poster_path}`}
+                    alt={tvShow.name}
                     className="w-full md:w-1/3 rounded-lg"
                 />
 
                 {/* Details */}
                 <div className="flex-1">
-                    <h1 className="text-4xl font-bold">{movie.title}</h1>
-                    <p className="mt-2 text-light-200">{movie.tagline}</p>
+                    <h1 className="text-4xl font-bold">{tvShow.name}</h1>
+                    <p className="mt-2 text-light-200">{tvShow.tagline}</p>
 
                     {/* Metadata */}
                     <div className="mt-4 flex flex-wrap gap-4">
-                        <span className="text-light-200">{movie.release_date}</span>
-                        <span className="text-light-200">{movie.runtime} minutes</span>
-                        <span className="text-light-200">{movie.vote_average}/10</span>
+                        <span className="text-light-200">First Air Date: {tvShow.first_air_date}</span>
+                        <span className="text-light-200">Seasons: {tvShow.number_of_seasons}</span>
+                        <span className="text-light-200">Episodes: {tvShow.number_of_episodes}</span>
+                        <span className="text-light-200">Rating: {tvShow.vote_average}/10</span>
                         <div className="flex gap-2">
-                            {movie.genres.map((genre) => (
+                            {tvShow.genres.map((genre) => (
                                 <span key={genre.id} className="px-2 py-1 bg-light-100/10 rounded">
                                     {genre.name}
                                 </span>
@@ -132,13 +133,17 @@ const MovieDetailsPage = () => {
                     </div>
 
                     {/* Overview */}
-                    <p className="mt-6 text-light-200">{movie.overview}</p>
+                    <p className="mt-6 text-light-200">{tvShow.overview}</p>
 
-                    {/* Director */}
-                    {director && (
+                    {/* Creators */}
+                    {creators.length > 0 && (
                         <div className="mt-6">
-                            <h2 className="text-xl font-bold">Director</h2>
-                            <p className="text-light-200">{director.name}</p>
+                            <h2 className="text-xl font-bold">Creators</h2>
+                            <div className="flex flex-wrap gap-2">
+                                {creators.map((creator) => (
+                                    <p key={creator.id} className="text-light-200">{creator.name}</p>
+                                ))}
+                            </div>
                         </div>
                     )}
 
@@ -149,7 +154,7 @@ const MovieDetailsPage = () => {
                             <div className="mt-4 aspect-video w-full max-w-2xl">
                                 <iframe
                                     src={`https://www.youtube.com/embed/${trailerKey}`}
-                                    title="Movie Trailer"
+                                    title="TV Show Trailer"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     className="w-full h-full rounded-lg"
@@ -178,28 +183,28 @@ const MovieDetailsPage = () => {
                         </div>
                     </div>
 
-                    {/* Similar Movies */}
+                    {/* Similar TV Shows */}
                     <div className="mt-6">
-                        <h2 className="text-xl font-bold">Similar Movies</h2>
-                        {similarMovies.length > 0 ? (
+                        <h2 className="text-xl font-bold">Similar TV Shows</h2>
+                        {similarTVShows.length > 0 ? (
                             <div className="flex flex-wrap gap-4 mt-4">
-                                {similarMovies.slice(0, 5).map((similarMovie) => (
+                                {similarTVShows.slice(0, 5).map((similarTVShow) => (
                                     <div
-                                        key={similarMovie.id}
+                                        key={similarTVShow.id}
                                         className="flex flex-col items-center cursor-pointer hover:opacity-80"
-                                        onClick={() => handleSimilarMovieClick(similarMovie.id)}
+                                        onClick={() => handleSimilarTVShowClick(similarTVShow.id)}
                                     >
                                         <img
-                                            src={similarMovie.poster_path ? `https://image.tmdb.org/t/p/w200${similarMovie.poster_path}` : '/no-movie.png'}
-                                            alt={similarMovie.title}
+                                            src={similarTVShow.poster_path ? `https://image.tmdb.org/t/p/w200${similarTVShow.poster_path}` : '/no-movie.png'}
+                                            alt={similarTVShow.name}
                                             className="w-24 h-24 rounded-lg object-cover"
                                         />
-                                        <p className="mt-2 text-center text-light-200">{similarMovie.title}</p>
+                                        <p className="mt-2 text-center text-light-200">{similarTVShow.name}</p>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-light-200">No similar movies found.</p>
+                            <p className="text-light-200">No similar TV shows found.</p>
                         )}
                     </div>
                 </div>
@@ -208,4 +213,4 @@ const MovieDetailsPage = () => {
     );
 };
 
-export default MovieDetailsPage;
+export default TVShowDetails;
