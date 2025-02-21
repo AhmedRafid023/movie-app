@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
+import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = () => {
 
@@ -8,8 +9,18 @@ const LoginPage = () => {
     // const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const {setLoggedIn, setUserName} = useContext(AuthContext);
 
-    const handleLogin = (e) => {
+    const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+    const API_OPTIONS = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password })
+    };
+
+    const handleLogin = async (e) => {
         e.preventDefault();
 
         // Basic validation
@@ -19,12 +30,29 @@ const LoginPage = () => {
         }
 
         // Simulate login (replace with actual API call)
-        if (email === 'user@example.com' && password === 'password') {
-            setError('');
-            alert('Login successful!');
-            navigate('/'); // Redirect to home page after login
-        } else {
-            setError('Invalid email or password.');
+        try {
+            const response = await fetch(`${LOCAL_API_BASE_URL}/auth/login`, API_OPTIONS);
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed. Please try again.');
+            }
+
+            setLoggedIn(true);
+            setUserName(data.user.name);
+
+            if (data.token) {
+                localStorage.setItem('token', data.token); // Store the token in localStorage
+            }
+
+            if(data.user){
+                localStorage.setItem("user", JSON.stringify(data.user));
+            }
+
+            // Redirect to the home page or dashboard on successful login
+            navigate('/');
+        }catch (error){
+            setError(error.message);
         }
     };
 
