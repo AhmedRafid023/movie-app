@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import Search from "../components/Search.jsx";
-import Spinner from "../components/Spinner.jsx";
-import MovieCard from "../components/MovieCard.jsx";
-import {useDebounce} from "react-use";
+import React, { useEffect, useState } from 'react';
+import Search from '../components/Search.jsx';
+import Spinner from '../components/Spinner.jsx';
+import TVShowCard from '../components/TVShowCard.jsx';
+import { useDebounce } from 'react-use';
 import { Link } from 'react-router-dom';
-import TVShowCard from "../components/TVShowCard.jsx";
-
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -14,10 +12,10 @@ const API_OPTIONS = {
     headers: {
         accept: 'application/json',
         authorization: `Bearer ${API_KEY}`,
-    }
-}
-const TvShows = () => {
+    },
+};
 
+const TvShows = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [tvShowList, setTvShowList] = useState([]);
@@ -25,29 +23,33 @@ const TvShows = () => {
     const [debounceSearchTerm, setDebounceSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [featuredTvShow, setFeaturedTvShow] = useState(null);
 
-    //debounce the search to optimize the API Call
-    useDebounce( () => setDebounceSearchTerm(searchTerm), 500, [searchTerm]);
+    // Debounce the search to optimize the API call
+    useDebounce(() => {
+        setDebounceSearchTerm(searchTerm);
+        setPage(1);
+    },
+        500, [searchTerm]);
 
+    // Fetch TV shows from the API
     const fetchTvShows = async (query = '', page = 1) => {
         setIsLoading(true);
-        setErrorMessage('')
+        setErrorMessage('');
 
-        try{
+        try {
             const endpoint = query
                 ? `${API_BASE_URL}/search/tv?query=${encodeURIComponent(query)}&page=${page}`
                 : `${API_BASE_URL}/discover/tv?sort_by=vote_count.desc&page=${page}`;
-
             const response = await fetch(endpoint, API_OPTIONS);
 
             if (!response.ok) {
-                throw new Error(`${response.status} ${response.statusText}`);
+                throw new Error('Could not fetch TV shows');
             }
-
             const data = await response.json();
 
-            if (data.Response === false) {
-                setErrorMessage('Could not fetch TV shows');
+            if (data.results.length === 0) {
+                setErrorMessage('No TV shows found.');
                 setTvShowList([]);
                 return;
             }
@@ -55,29 +57,32 @@ const TvShows = () => {
             // Update TV show list and total pages
             setTvShowList(data.results);
             setTotalPages(data.total_pages);
-        }catch (error) {
+
+            // Set the first TV show as the featured TV show if no search term is provided
+            if (!query && data.results.length > 0) {
+                setFeaturedTvShow(data.results[0]);
+            }
+        } catch (error) {
             console.log(`Error fetching TV shows: ${error}`);
             setErrorMessage('Could not fetch TV shows. Please try again later.');
-        }finally {
+        } finally {
             setIsLoading(false);
         }
+    };
 
-    }
-
+    // Fetch TV shows on component mount or when debounced search term/page changes
     useEffect(() => {
         fetchTvShows(debounceSearchTerm, page);
     }, [debounceSearchTerm, page]);
 
-
-
+    // Handle pagination
     const handlePageClick = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setPage(newPage);
         }
     };
 
-
-    // Generate page numbers to display
+    // Generate page numbers for pagination
     const generatePageNumbers = () => {
         const pages = [];
         const maxVisiblePages = 5; // Number of visible page buttons
@@ -95,70 +100,85 @@ const TvShows = () => {
         return pages;
     };
 
-
     return (
-        <main>
-            <div className="pattern" />
-
-            <div className="wrapper">
-                <header>
-                    <h1>Find <span className="text-gradient">Tv Shows</span> You will Enjoy Without The Hassle</h1>
-
-                    <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                </header>
-
-                <section className="all-movies">
-                    <h2 className="mt-[20px]">All TV Shows</h2>
-
-                    {isLoading ? (
-                        <Spinner />
-                    ) : errorMessage ? (
-                        <p className="text-red-500">{errorMessage}</p>
-                    ) : (
-                        <ul>
-                            {tvShowList
-                                .map((tvShow) => (
-                                    <Link to={`/tv/${tvShow.id}`} key={tvShow.id}> {/* Wrap TVShowCard in Link */}
-                                        <TVShowCard tvShow={tvShow} />
-                                    </Link>
-                                ))}
-                        </ul>
-                    )}
-
-                    {/* Pagination Controls */}
-                    <div className="pagination">
-                        <button
-                            onClick={() => handlePageClick(page - 1)}
-                            disabled={page === 1 || isLoading}
-                            className="pagination-button"
-                        >
-                            Previous
-                        </button>
-
-                        {/* Page Numbers */}
-                        {generatePageNumbers().map((pageNumber) => (
-                            <button
-                                key={pageNumber}
-                                onClick={() => handlePageClick(pageNumber)}
-                                disabled={pageNumber === page || isLoading}
-                                className={`pagination-button ${pageNumber === page ? 'active' : ''}`}
-                            >
-                                {pageNumber}
-                            </button>
-                        ))}
-
-                        <button
-                            onClick={() => handlePageClick(page + 1)}
-                            disabled={page === totalPages || isLoading}
-                            className="pagination-button"
-                        >
-                            Next
-                        </button>
+        <main className="bg-dark-100 text-light-100">
+            {/* Hero Section */}
+            <section className="hero-section relative h-[600px] flex items-end pb-16">
+                {featuredTvShow && (
+                    <div
+                        className="absolute inset-0 bg-cover bg-center opacity-90"
+                        style={{
+                            backgroundImage: `url(https://image.tmdb.org/t/p/original${featuredTvShow.backdrop_path})`,
+                        }}
+                    ></div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-dark-100 via-dark-100/80 to-transparent"></div>
+                <div className="relative z-10 container mx-auto px-4">
+                    <div className="max-w-3xl">
+                        <h1 className="text-5xl font-bold mb-4">
+                            {featuredTvShow?.name || 'Find TV Shows You Will Love'}
+                        </h1>
+                        <p className="text-light-200 text-lg mb-6">
+                            {featuredTvShow?.overview ||
+                                'Explore a wide range of TV shows and discover your next favorite.'}
+                        </p>
+                        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                     </div>
-                </section>
+                </div>
+            </section>
 
-            </div>
+            {/* TV Show List Section */}
+            <section className="container mx-auto px-4 py-8">
+                <h2 className="text-2xl font-bold mb-6">All TV Shows</h2>
+                {isLoading ? (
+                    <Spinner />
+                ) : errorMessage ? (
+                    <p className="text-red-500">{errorMessage}</p>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {tvShowList.map((tvShow) => (
+                            <Link to={`/tv/${tvShow.id}`} key={tvShow.id}>
+                                <TVShowCard tvShow={tvShow} />
+                            </Link>
+                        ))}
+                    </div>
+                )}
 
+                {/* Pagination Controls */}
+                <div className="flex justify-center gap-2 mt-8">
+                    <button
+                        onClick={() => handlePageClick(page - 1)}
+                        disabled={page === 1 || isLoading}
+                        className="px-4 py-2 bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+                    >
+                        Previous
+                    </button>
+
+                    {/* Page Numbers */}
+                    {generatePageNumbers().map((pageNumber) => (
+                        <button
+                            key={pageNumber}
+                            onClick={() => handlePageClick(pageNumber)}
+                            disabled={pageNumber === page || isLoading}
+                            className={`px-4 py-2 rounded-lg ${
+                                pageNumber === page
+                                    ? 'bg-primary-500 text-white'
+                                    : 'bg-dark-200 hover:bg-dark-300'
+                            } transition-colors`}
+                        >
+                            {pageNumber}
+                        </button>
+                    ))}
+
+                    <button
+                        onClick={() => handlePageClick(page + 1)}
+                        disabled={page === totalPages || isLoading}
+                        className="px-4 py-2 bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+                    >
+                        Next
+                    </button>
+                </div>
+            </section>
         </main>
     );
 };
