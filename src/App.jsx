@@ -8,21 +8,24 @@ import TvShows from "./pages/TvShows.jsx";
 import TVShowDetails from "./pages/TVShowDetails.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
+import { AuthProvider } from './context/AuthContext.jsx';
 
 const App = () => {
     return (
-        <Router>
-            <Navbar />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<SignUpPage />} />
-                <Route path="/movies" element={<Movies />} />
-                <Route path="/tv-shows" element={<TvShows />} />
-                <Route path="/movie/:id" element={<MovieDetailsPage />} />
-                <Route path='/tv/:id' element={<TVShowDetails />} />
-            </Routes>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Navbar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<SignUpPage />} />
+                    <Route path="/movies" element={<Movies />} />
+                    <Route path="/tv-shows" element={<TvShows />} />
+                    <Route path="/movie/:id" element={<MovieDetailsPage />} />
+                    <Route path='/tv/:id' element={<TVShowDetails />} />
+                </Routes>
+            </Router>
+        </AuthProvider>
     );
 };
 

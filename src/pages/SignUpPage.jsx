@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+
 const SignUpPage = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -8,7 +9,16 @@ const SignUpPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSignUp = (e) => {
+    const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+    const API_OPTIONS = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password })
+    };
+
+    const handleSignUp = async (e) => {
         e.preventDefault();
 
         // Basic validation
@@ -18,9 +28,21 @@ const SignUpPage = () => {
         }
 
         // Simulate sign-up (replace with actual API call)
-        setError('');
-        alert('Sign up successful!');
-        navigate('/login'); // Redirect to login page after sign-up
+        try {
+            const response = await fetch(`${LOCAL_API_BASE_URL}/auth/register`, API_OPTIONS);
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Sign up failed. Please try again.');
+            }
+
+            // Redirect to login page on successful sign-up
+            navigate('/login');
+
+
+        }catch(err) {
+            setError(err.message);
+        }
     };
 
     return (
