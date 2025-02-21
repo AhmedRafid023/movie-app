@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from "../components/Spinner.jsx";
 import {AuthContext} from "../context/AuthContext.jsx";
 import {Check, Plus} from "lucide-react";
+import {toast} from "react-toastify";
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -150,7 +151,7 @@ const TVShowDetails = () => {
 
             const data = await response.json();
             setIsInWatchlist(true); // Update the state
-            alert('Added to watchlist!');
+            toast.success('Added to watchlist!');
         } catch (error) {
             console.error('Error adding to watchlist:', error);
             alert('Failed to add to watchlist. Please try again.');

@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import { AuthProvider } from './context/AuthContext.jsx';
 import WatchList from "./pages/WatchList.jsx";
+import {ToastContainer} from "react-toastify";
 
 const App = () => {
     return (
@@ -26,6 +27,17 @@ const App = () => {
                     <Route path='/tv/:id' element={<TVShowDetails />} />
                     <Route path='/watchlist' element={<WatchList />} />
                 </Routes>
+                <ToastContainer
+                    position="top-right" // Position of the toasts
+                    autoClose={3000} // Auto-close after 3 seconds
+                    hideProgressBar={false} // Show progress bar
+                    newestOnTop={false} // New toasts appear below older ones
+                    closeOnClick // Close toasts on click
+                    rtl={false} // Left-to-right layout
+                    pauseOnFocusLoss // Pause toasts when window loses focus
+                    draggable // Allow dragging toasts
+                    pauseOnHover // Pause toasts on hover
+                />
             </Router>
         </AuthProvider>
     );
