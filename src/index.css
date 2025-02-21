@@ -163,6 +163,70 @@
     .page-number {
         @apply text-gray-100 font-medium text-base;
     }
+
+    .watchlist-page {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .watchlist-page h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+    .watchlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .watchlist-card {
+        background: #1a1a1a;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.2s;
+        cursor: pointer;
+    }
+
+    .watchlist-card:hover {
+        transform: scale(1.05);
+    }
+
+    .watchlist-card img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .watchlist-card-details {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .watchlist-card-details h3 {
+        margin: 10px 0;
+        font-size: 1.2rem;
+    }
+
+    .watchlist-card-details p {
+        font-size: 0.9rem;
+        color: #ccc;
+    }
+
+    .remove-button {
+        background: #e50914;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .remove-button:hover {
+        background: #ff0a16;
+    }
 }
 
 @utility text-gradient {

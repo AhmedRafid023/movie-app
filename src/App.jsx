@@ -9,6 +9,7 @@ import TVShowDetails from "./pages/TVShowDetails.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import { AuthProvider } from './context/AuthContext.jsx';
+import WatchList from "./pages/WatchList.jsx";
 
 const App = () => {
     return (
@@ -23,6 +24,7 @@ const App = () => {
                     <Route path="/tv-shows" element={<TvShows />} />
                     <Route path="/movie/:id" element={<MovieDetailsPage />} />
                     <Route path='/tv/:id' element={<TVShowDetails />} />
+                    <Route path='/watchlist' element={<WatchList />} />
                 </Routes>
             </Router>
         </AuthProvider>

@@ -21,7 +21,7 @@ const Navbar = () => {
             <div className="container mx-auto flex justify-between items-center">
                 {/* Logo */}
                 <Link to="/" className="text-yellow-400 text-2xl font-bold">
-                    IMDb
+                    Matrix
                 </Link>
 
                 {/* Navigation Links */}
@@ -32,9 +32,9 @@ const Navbar = () => {
                     <Link to="/tv-shows" className="text-white hover:text-gray-300">
                         TV Shows
                     </Link>
-                    {/*<Link to="/watchlist" className="text-white hover:text-gray-300">*/}
-                    {/*    Watchlist*/}
-                    {/*</Link>*/}
+                    <Link to={ loggedIn ? "/watchlist" : "/login" } className="text-white hover:text-gray-300">
+                        Watchlist
+                    </Link>
                 </div>
 
                 {/* User Options */}

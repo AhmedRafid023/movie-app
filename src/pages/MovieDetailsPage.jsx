@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from "../components/Spinner.jsx";
+import {AuthContext} from "../context/AuthContext.jsx";
+import { Plus, Check } from "lucide-react"; // Import icons
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -21,6 +23,11 @@ const MovieDetailsPage = () => {
     const [error, setError] = useState('');
     const [similarMovies, setSimilarMovies] = useState([]);
     const [trailerKey, setTrailerKey] = useState(null); // State to store the YouTube trailer key
+    const { loggedIn, userId,  } = useContext(AuthContext); // Get user info from context
+    const [isInWatchlist, setIsInWatchlist] = useState(false);
+
+    const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+
 
     const fetchMovieDetails = async () => {
         setIsLoading(true);
@@ -72,13 +79,82 @@ const MovieDetailsPage = () => {
         }
     };
 
+    const fetchWatchlistStatus = async () => {
+        if (!loggedIn) return; // Only fetch if the user is logged in
+
+        try {
+            const response = await fetch(`${LOCAL_API_BASE_URL}/watchlist/check`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    tmdb_id: movie.id.toString(),
+                    media_type: 'movie',
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch watchlist status');
+            }
+
+            const data = await response.json();
+            setIsInWatchlist(data.inWatchlist); // Update the state
+        } catch (error) {
+            console.error('Error fetching watchlist status:', error);
+        }
+    };
+
     useEffect(() => {
         fetchMovieDetails();
     }, [id]);
 
+    useEffect(() => {
+        if (loggedIn && userId && movie) {
+            fetchWatchlistStatus();
+        }
+    }, [loggedIn, userId, movie]);
+
     // Function to handle clicking on a similar movie
     const handleSimilarMovieClick = (movieId) => {
         navigate(`/movie/${movieId}`);
+    };
+
+    const handleAddToWatchlist = async () => {
+        if (!loggedIn) {
+            alert('Please log in to add movies to your watchlist.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/watchlist/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    tmdb_id: movie.id.toString(),
+                    media_type: 'movie', // Assuming this is a movie
+                    title: movie.title,
+                    poster_path: movie.poster_path,
+                    backdrop_path: movie.backdrop_path,
+                    extra_details: {}, // Add any extra details if needed
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add to watchlist');
+            }
+
+            const data = await response.json();
+            setIsInWatchlist(true); // Update the state
+            alert('Added to watchlist!');
+        } catch (error) {
+            console.error('Error adding to watchlist:', error);
+            alert('Failed to add to watchlist. Please try again.');
+        }
     };
 
     if (isLoading) {
@@ -139,6 +215,27 @@ const MovieDetailsPage = () => {
                         <div className="mt-6">
                             <h2 className="text-xl font-bold">Director</h2>
                             <p className="text-light-200">{director.name}</p>
+                        </div>
+                    )}
+
+                    {/* Watchlist Button */}
+                    {loggedIn && (
+                        <div className="mt-6">
+                            {isInWatchlist ? (
+                                <button
+                                    className="flex items-center gap-2 px-6 py-2 border border-gray-500 text-white rounded-lg hover:bg-gray-700 transition"
+                                    disabled
+                                >
+                                    <Check size={18} /> Added to Watchlist
+                                </button>
+                            ) : (
+                                <button
+                                    className="flex items-center gap-2 px-6 py-2 border border-gray-500 text-white rounded-lg hover:bg-gray-700 transition"
+                                    onClick={handleAddToWatchlist}
+                                >
+                                    <Plus size={18} /> Add to Watchlist
+                                </button>
+                            )}
                         </div>
                     )}
 
