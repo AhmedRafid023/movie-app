@@ -9,7 +9,7 @@ const LoginPage = () => {
     // const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const {setLoggedIn, setUserName} = useContext(AuthContext);
+    const {setLoggedIn, setUserName, setUserId} = useContext(AuthContext);
 
     const LOCAL_API_BASE_URL = "http://localhost:5000/api";
     const API_OPTIONS = {
@@ -38,9 +38,6 @@ const LoginPage = () => {
                 throw new Error(data.message || 'Login failed. Please try again.');
             }
 
-            setLoggedIn(true);
-            setUserName(data.user.name);
-
             if (data.token) {
                 localStorage.setItem('token', data.token); // Store the token in localStorage
             }
@@ -48,6 +45,10 @@ const LoginPage = () => {
             if(data.user){
                 localStorage.setItem("user", JSON.stringify(data.user));
             }
+
+            setLoggedIn(true);
+            setUserName(data.user.name);
+            setUserId(data.user.id);
 
             // Redirect to the home page or dashboard on successful login
             navigate('/');
