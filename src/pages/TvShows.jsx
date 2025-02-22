@@ -24,6 +24,7 @@ const TvShows = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [featuredTvShow, setFeaturedTvShow] = useState(null);
+    const [featuredContent, setFeaturedContent] = useState(null);
 
     // Debounce the search to optimize the API call
     useDebounce(() => {
@@ -31,6 +32,20 @@ const TvShows = () => {
         setPage(1);
     },
         500, [searchTerm]);
+
+    const fetchFeaturedContent = async () => {
+        try {
+            // Fetch popular TV shows
+            const response = await fetch(`${API_BASE_URL}/tv/popular?page=1`, API_OPTIONS);
+            if (!response.ok) throw new Error("Could not fetch featured content");
+            const data = await response.json();
+
+            // Set the first popular TV show as featured content
+            setFeaturedContent(data.results[0]);
+        } catch (error) {
+            console.log(`Error fetching featured content: ${error}`);
+        }
+    };
 
     // Fetch TV shows from the API
     const fetchTvShows = async (query = '', page = 1) => {
@@ -73,6 +88,7 @@ const TvShows = () => {
     // Fetch TV shows on component mount or when debounced search term/page changes
     useEffect(() => {
         fetchTvShows(debounceSearchTerm, page);
+        fetchFeaturedContent();
     }, [debounceSearchTerm, page]);
 
     // Handle pagination
@@ -104,11 +120,11 @@ const TvShows = () => {
         <main className="bg-dark-100 text-light-100">
             {/* Hero Section */}
             <section className="hero-section relative h-[600px] flex items-end pb-16">
-                {featuredTvShow && (
+                {featuredContent && (
                     <div
                         className="absolute inset-0 bg-cover bg-center opacity-90"
                         style={{
-                            backgroundImage: `url(https://image.tmdb.org/t/p/original${featuredTvShow.backdrop_path})`,
+                            backgroundImage: `url(https://image.tmdb.org/t/p/original${featuredContent.backdrop_path})`,
                         }}
                     ></div>
                 )}
@@ -116,10 +132,10 @@ const TvShows = () => {
                 <div className="relative z-10 container mx-auto px-4">
                     <div className="max-w-3xl">
                         <h1 className="text-5xl font-bold mb-4">
-                            {featuredTvShow?.name || 'Find TV Shows You Will Love'}
+                            {featuredContent?.name || 'Find TV Shows You Will Love'}
                         </h1>
                         <p className="text-light-200 text-lg mb-6">
-                            {featuredTvShow?.overview ||
+                            {featuredContent?.overview ||
                                 'Explore a wide range of TV shows and discover your next favorite.'}
                         </p>
                         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

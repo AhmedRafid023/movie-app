@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import Spinner from '../components/Spinner.jsx';
-import { FaTrash } from 'react-icons/fa'; // Import trash icon from react-icons
+import { FaTrash } from 'react-icons/fa';
+import Search from "../components/Search.jsx"; // Import trash icon from react-icons
 
 const Watchlist = () => {
     const [watchlist, setWatchlist] = useState([]);
@@ -11,6 +12,7 @@ const Watchlist = () => {
     const [error, setError] = useState('');
     const { loggedIn, userId } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [featuredContent, setFeaturedContent] = useState(null);
 
     const LOCAL_API_BASE_URL = 'http://localhost:5000/api';
 
@@ -37,6 +39,9 @@ const Watchlist = () => {
 
                 const data = await response.json();
                 setWatchlist(data.watchlist);
+                if (data.watchlist.length > 0) {
+                    setFeaturedContent(data.watchlist[0]);
+                }
             } catch (error) {
                 console.error('Error fetching watchlist:', error);
                 setError('Failed to fetch watchlist. Please try again later.');
@@ -68,9 +73,17 @@ const Watchlist = () => {
             }
 
             // Update the watchlist state by filtering out the removed item
-            setWatchlist((prevWatchlist) =>
-                prevWatchlist.filter((item) => item.tmdb_id !== tmdbId)
-            );
+            setWatchlist((prevWatchlist) => {
+                const updatedWatchlist = prevWatchlist.filter((item) => item.tmdb_id !== tmdbId);
+
+                // Update featuredContent if the removed item was the featured content
+                if (featuredContent && featuredContent.tmdb_id === tmdbId) {
+                    setFeaturedContent(updatedWatchlist.length > 0 ? updatedWatchlist[0] : null);
+                }
+
+                return updatedWatchlist;
+            });
+
             toast.success('Removed from watchlist!');
         } catch (error) {
             console.error('Error removing from watchlist:', error);
@@ -98,13 +111,24 @@ const Watchlist = () => {
     return (
         <main className="bg-dark-100 text-light-100">
             {/* Hero Section */}
-            <section className="hero-section relative h-[400px] flex items-end pb-16">
+            <section className="hero-section relative h-[600px] flex items-end pb-16">
+                {featuredContent && (
+                    <div
+                        className="absolute inset-0 bg-cover bg-center opacity-90"
+                        style={{
+                            backgroundImage: `url(https://image.tmdb.org/t/p/original${featuredContent.backdrop_path})`,
+                        }}
+                    ></div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-100 via-dark-100/80 to-transparent"></div>
                 <div className="relative z-10 container mx-auto px-4">
                     <div className="max-w-3xl">
-                        <h1 className="text-5xl font-bold mb-4">My Watchlist</h1>
+                        <h1 className="text-5xl font-bold mb-4">
+                            {featuredContent?.name || 'Find TV Shows You Will Love'}
+                        </h1>
                         <p className="text-light-200 text-lg mb-6">
-                            Your personalized collection of movies and TV shows.
+                            {featuredContent?.overview ||
+                                'Explore a wide range of TV shows and discover your next favorite.'}
                         </p>
                     </div>
                 </div>

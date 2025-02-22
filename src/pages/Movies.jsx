@@ -23,7 +23,8 @@ const Movies = () => {
     const [debounceSearchTerm, setDebounceSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [featuredMovie, setFeaturedMovie] = useState(null);
+    const [featuredContent, setFeaturedContent] = useState(null);
+
 
     // Debounce the search to optimize the API call
     useDebounce(() => {
@@ -31,6 +32,18 @@ const Movies = () => {
             setPage(1);
         },
         500, [searchTerm]);
+
+
+    const fetchFeaturedContent = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/movie/popular?page=1`, API_OPTIONS);
+            if (!response.ok) throw new Error("Could not fetch featured content");
+            const data = await response.json();
+            setFeaturedContent(data.results[0]);
+        } catch (error) {
+            console.log(`Error fetching featured content: ${error}`);
+        }
+    };
 
     // Fetch movies from the API
     const fetchMovies = async (query = '', page = 1) => {
@@ -59,9 +72,9 @@ const Movies = () => {
             setTotalPages(data.total_pages);
 
             // Set the first movie as the featured movie if no search term is provided
-            if (!query && data.results.length > 0) {
-                setFeaturedMovie(data.results[0]);
-            }
+            // if (!query && data.results.length > 0) {
+            //     setFeaturedMovie(data.results[0]);
+            // }
         } catch (error) {
             console.log(`Error fetching movies: ${error}`);
             setErrorMessage('Could not fetch movies. Please try again later.');
@@ -73,6 +86,7 @@ const Movies = () => {
     // Fetch movies on component mount or when debounced search term/page changes
     useEffect(() => {
         fetchMovies(debounceSearchTerm, page);
+        fetchFeaturedContent();
     }, [debounceSearchTerm, page]);
 
     // Handle pagination
@@ -104,11 +118,11 @@ const Movies = () => {
         <main className="bg-dark-100 text-light-100">
             {/* Hero Section */}
             <section className="hero-section relative h-[600px] flex items-end pb-16">
-                {featuredMovie && (
+                {featuredContent && (
                     <div
                         className="absolute inset-0 bg-cover bg-center opacity-90"
                         style={{
-                            backgroundImage: `url(https://image.tmdb.org/t/p/original${featuredMovie.backdrop_path})`,
+                            backgroundImage: `url(https://image.tmdb.org/t/p/original${featuredContent.backdrop_path})`,
                         }}
                     ></div>
                 )}
@@ -116,10 +130,10 @@ const Movies = () => {
                 <div className="relative z-10 container mx-auto px-4">
                     <div className="max-w-3xl">
                         <h1 className="text-5xl font-bold mb-4">
-                            {featuredMovie?.title || 'Find Movies You Will Love'}
+                            {featuredContent?.title || 'Find Movies You Will Love'}
                         </h1>
                         <p className="text-light-200 text-lg mb-6">
-                            {featuredMovie?.overview ||
+                            {featuredContent?.overview ||
                                 'Explore a wide range of movies and discover your next favorite.'}
                         </p>
                         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
