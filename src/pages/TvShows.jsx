@@ -23,7 +23,6 @@ const TvShows = () => {
     const [debounceSearchTerm, setDebounceSearchTerm] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [featuredTvShow, setFeaturedTvShow] = useState(null);
     const [featuredContent, setFeaturedContent] = useState(null);
 
     // Debounce the search to optimize the API call
@@ -73,10 +72,6 @@ const TvShows = () => {
             setTvShowList(data.results);
             setTotalPages(data.total_pages);
 
-            // Set the first TV show as the featured TV show if no search term is provided
-            if (!query && data.results.length > 0) {
-                setFeaturedTvShow(data.results[0]);
-            }
         } catch (error) {
             console.log(`Error fetching TV shows: ${error}`);
             setErrorMessage('Could not fetch TV shows. Please try again later.');
