@@ -35,7 +35,7 @@ const TvShows = () => {
     const fetchFeaturedContent = async () => {
         try {
             // Fetch popular TV shows
-            const response = await fetch(`${API_BASE_URL}/tv/popular?page=1`, API_OPTIONS);
+            const response = await fetch(`${API_BASE_URL}/trending/tv/day?page=1`, API_OPTIONS);
             if (!response.ok) throw new Error("Could not fetch featured content");
             const data = await response.json();
 

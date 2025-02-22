@@ -20,22 +20,13 @@ const Home = () => {
     const [upcomingMovies, setUpcomingMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const fetchFeaturedContent = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/movie/popular?page=1`, API_OPTIONS);
-            if (!response.ok) throw new Error("Could not fetch featured content");
-            const data = await response.json();
-            setFeaturedContent(data.results[0]);
-        } catch (error) {
-            console.log(`Error fetching featured content: ${error}`);
-        }
-    };
 
     const fetchTrendingMovies = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/trending/movie/day?page=1`, API_OPTIONS);
             if (!response.ok) throw new Error("Could not fetch trending movies");
             const data = await response.json();
+            setFeaturedContent(data.results[0]);
             setTrendingMovies(data.results.slice(0, 10));
         } catch (error) {
             console.log(`Error fetching trending movies: ${error}`);
@@ -78,7 +69,6 @@ const Home = () => {
     useEffect(() => {
         setIsLoading(true);
         Promise.all([
-            fetchFeaturedContent(),
             fetchTrendingMovies(),
             fetchTrendingTVShows(),
             fetchTopRatedMovies(),

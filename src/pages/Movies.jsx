@@ -36,7 +36,7 @@ const Movies = () => {
 
     const fetchFeaturedContent = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/movie/popular?page=1`, API_OPTIONS);
+            const response = await fetch(`${API_BASE_URL}/trending/movie/day?page=1`, API_OPTIONS);
             if (!response.ok) throw new Error("Could not fetch featured content");
             const data = await response.json();
             setFeaturedContent(data.results[0]);
