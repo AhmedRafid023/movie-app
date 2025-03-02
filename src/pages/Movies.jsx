@@ -53,7 +53,7 @@ const Movies = () => {
         try {
             const endpoint = query
                 ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`
-                : `${API_BASE_URL}/discover/movie?sort_by=vote_count.desc&page=${page}`;
+                : `${API_BASE_URL}/trending/movie/day?page=${page}`;
             const response = await fetch(endpoint, API_OPTIONS);
 
             if (!response.ok) {

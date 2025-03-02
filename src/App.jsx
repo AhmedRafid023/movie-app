@@ -11,6 +11,7 @@ import SignUpPage from "./pages/SignUpPage.jsx";
 import { AuthProvider } from './context/AuthContext.jsx';
 import WatchList from "./pages/WatchList.jsx";
 import {ToastContainer} from "react-toastify";
+import Footer from "./components/Footer.jsx";
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                     <Route path='/tv/:id' element={<TVShowDetails />} />
                     <Route path='/watchlist' element={<WatchList />} />
                 </Routes>
+                <Footer />
                 <ToastContainer
                     position="top-right" // Position of the toasts
                     autoClose={3000} // Auto-close after 3 seconds
