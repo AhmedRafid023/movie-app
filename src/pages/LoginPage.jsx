@@ -33,7 +33,7 @@ const LoginPage = () => {
 
         // Simulate login (replace with actual API call)
         try {
-            const response = await fetch(`${LOGIN_API_BASE_URL}/api/auth/login`, API_OPTIONS);
+            const response = await fetch(`${LOGIN_API_BASE_URL}/auth/login`, API_OPTIONS);
 
             const data = await response.json();
             if (!response.ok) {

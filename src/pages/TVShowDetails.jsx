@@ -131,7 +131,7 @@ const TVShowDetails = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/watchlist/add`, {
+            const response = await fetch(`http://localhost:5000/watchlist/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

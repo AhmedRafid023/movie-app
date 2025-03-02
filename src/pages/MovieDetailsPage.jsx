@@ -131,7 +131,7 @@ const MovieDetailsPage = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/api/watchlist/add`, {
+            const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
