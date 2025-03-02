@@ -33,6 +33,11 @@ const Movies = () => {
         },
         500, [searchTerm]);
 
+    // Scroll to top when the page changes
+    useEffect(() => {
+        window.scrollTo(0, 0); // Scroll to the top of the page
+    }, [page]);
+
 
     const fetchFeaturedContent = async () => {
         try {
