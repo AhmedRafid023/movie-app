@@ -14,7 +14,9 @@ const Watchlist = () => {
     const navigate = useNavigate();
     const [featuredContent, setFeaturedContent] = useState(null);
 
-    const LOCAL_API_BASE_URL = 'http://localhost:5000/api';
+    const WATCHLIST_API_BASE_URL = import.meta.env.MODE === 'development'
+        ? import.meta.env.VITE_LOCAL_BASE_URL
+        : import.meta.env.VITE_PROD_BASE_URL;
 
     // Fetch the user's watchlist
     useEffect(() => {
@@ -26,7 +28,7 @@ const Watchlist = () => {
 
         const fetchWatchlist = async () => {
             try {
-                const response = await fetch(`${LOCAL_API_BASE_URL}/watchlist/${userId}`, {
+                const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -56,7 +58,7 @@ const Watchlist = () => {
     // Remove an item from the watchlist
     const handleRemoveFromWatchlist = async (tmdbId, mediaType) => {
         try {
-            const response = await fetch(`${LOCAL_API_BASE_URL}/watchlist/remove`, {
+            const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/remove`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

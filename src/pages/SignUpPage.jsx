@@ -9,7 +9,9 @@ const SignUpPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+    const REGISTER_API_BASE_URL = import.meta.env.MODE === 'development'
+        ? import.meta.env.VITE_LOCAL_BASE_URL
+        : import.meta.env.VITE_PROD_BASE_URL;
     const API_OPTIONS = {
         method: "POST",
         headers: {
@@ -29,7 +31,7 @@ const SignUpPage = () => {
 
         // Simulate sign-up (replace with actual API call)
         try {
-            const response = await fetch(`${LOCAL_API_BASE_URL}/auth/register`, API_OPTIONS);
+            const response = await fetch(`${REGISTER_API_BASE_URL}/auth/register`, API_OPTIONS);
 
             const data = await response.json();
             if (!response.ok) {

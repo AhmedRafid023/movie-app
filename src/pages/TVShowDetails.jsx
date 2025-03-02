@@ -27,7 +27,9 @@ const TVShowDetails = () => {
     const { loggedIn, userId,  } = useContext(AuthContext); // Get user info from context
     const [isInWatchlist, setIsInWatchlist] = useState(false);
 
-    const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+    const WATCHLIST_API_BASE_URL = import.meta.env.MODE === 'development'
+        ? import.meta.env.VITE_LOCAL_BASE_URL
+        : import.meta.env.VITE_PROD_BASE_URL;
 
     const fetchTVShowDetails = async () => {
         setIsLoading(true);
@@ -83,7 +85,7 @@ const TVShowDetails = () => {
         if (!loggedIn) return; // Only fetch if the user is logged in
 
         try {
-            const response = await fetch(`${LOCAL_API_BASE_URL}/watchlist/check`, {
+            const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/check`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
