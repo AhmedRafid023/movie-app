@@ -18,6 +18,32 @@ const Watchlist = () => {
         ? import.meta.env.VITE_LOCAL_BASE_URL
         : import.meta.env.VITE_PROD_BASE_URL;
 
+    const fetchWatchlist = async () => {
+        try {
+            const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch watchlist');
+            }
+
+            const data = await response.json();
+            setWatchlist(data.watchlist);
+            if (data.watchlist.length > 0) {
+                setFeaturedContent(data.watchlist[0]);
+            }
+        } catch (error) {
+            console.error('Error fetching watchlist:', error);
+            setError('Failed to fetch watchlist. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Fetch the user's watchlist
     useEffect(() => {
         if (!loggedIn) {
@@ -25,33 +51,10 @@ const Watchlist = () => {
             setLoading(false);
             return;
         }
-
-        const fetchWatchlist = async () => {
-            try {
-                const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/${userId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch watchlist');
-                }
-
-                const data = await response.json();
-                setWatchlist(data.watchlist);
-                if (data.watchlist.length > 0) {
-                    setFeaturedContent(data.watchlist[0]);
-                }
-            } catch (error) {
-                console.error('Error fetching watchlist:', error);
-                setError('Failed to fetch watchlist. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
+        if (!userId) {
+            setLoading(true)
+            return;
+        }
         fetchWatchlist();
     }, [loggedIn, userId]);
 
