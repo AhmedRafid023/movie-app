@@ -28,7 +28,7 @@ const Watchlist = () => {
 
         const fetchWatchlist = async () => {
             try {
-                const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/${userId}`, {
+                const response = await fetch(`${WATCHLIST_API_BASE_URL}/api/watchlist/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Watchlist = () => {
     // Remove an item from the watchlist
     const handleRemoveFromWatchlist = async (tmdbId, mediaType) => {
         try {
-            const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/remove`, {
+            const response = await fetch(`${WATCHLIST_API_BASE_URL}/api/watchlist/remove`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
