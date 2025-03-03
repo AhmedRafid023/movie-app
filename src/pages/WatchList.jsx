@@ -4,7 +4,6 @@ import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import Spinner from '../components/Spinner.jsx';
 import { FaTrash } from 'react-icons/fa';
-import Search from "../components/Search.jsx"; // Import trash icon from react-icons
 
 const Watchlist = () => {
     const [watchlist, setWatchlist] = useState([]);
@@ -20,10 +19,15 @@ const Watchlist = () => {
 
     const fetchWatchlist = async () => {
         try {
+            const token = localStorage.getItem('token');
+            if(!token){
+                throw new Error('Token is missing');
+            }
             const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
             });
 
