@@ -126,6 +126,7 @@ const MovieDetailsPage = () => {
                     title: movie.title,
                     poster_path: movie.poster_path,
                     backdrop_path: movie.backdrop_path,
+                    rating: movie.vote_average,
                     extra_details: {},
                 }),
             });

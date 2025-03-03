@@ -126,6 +126,7 @@ const TVShowDetails = () => {
                     title: tvShow.name,
                     poster_path: tvShow.poster_path,
                     backdrop_path: tvShow.backdrop_path,
+                    rating: tvShow.vote_average,
                     extra_details: {},
                 }),
             });
