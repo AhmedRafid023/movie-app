@@ -30,7 +30,7 @@
 Clone the repository:  
 ```sh
 git clone https://github.com/AhmedRafid023/movie-app.git
-cd matrix
+cd movie-app
 ```
 
 Install dependencies:  
