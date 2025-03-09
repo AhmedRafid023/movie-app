@@ -161,7 +161,7 @@ const MovieDetailsPage = () => {
             <section className="relative h-[600px] flex items-end pb-16">
                 {/* Background Image */}
                 <div
-                    className="absolute inset-0 bg-cover bg-center opacity-90"
+                    className="absolute inset-0 bg-cover bg-top opacity-90"
                     style={{
                         backgroundImage: movie.backdrop_path
                             ? `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
