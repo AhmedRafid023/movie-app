@@ -86,7 +86,7 @@ const Home = () => {
             <section className="hero-section relative h-[600px] flex items-end pb-16">
                 {featuredContent && (
                     <div
-                        className="absolute inset-0 bg-cover bg-center"
+                        className="absolute inset-0 bg-cover bg-top"
                         style={{
                             backgroundImage: `url(https://image.tmdb.org/t/p/original${featuredContent.backdrop_path})`,
                         }}
