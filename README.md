@@ -22,9 +22,6 @@
 - **React Router** 🚏  
 - **Parallax Scrolling** 🎭  
 
-## 📸 Preview  
-
-
 ## 📦 Installation  
 
 Clone the repository:  
