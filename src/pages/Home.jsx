@@ -108,12 +108,6 @@ const Home = () => {
                             >
                                 View Details
                             </Link>
-                            <button
-                                className="px-6 py-2 bg-secondary-500 rounded-lg hover:bg-secondary-600 transition-colors"
-                                onClick={() => alert('Play trailer')}
-                            >
-                                Play Trailer
-                            </button>
                         </div>
                     </div>
                 </div>
