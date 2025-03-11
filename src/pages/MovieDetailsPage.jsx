@@ -267,8 +267,8 @@ const MovieDetailsPage = () => {
                                             alt={actor.name}
                                             className="w-24 h-24 rounded-full object-cover"
                                         />
-                                        <p className="mt-2 text-center text-light-200">{actor.name}</p>
-                                        <p className="text-sm text-gray-100">{actor.character}</p>
+                                        <p className="mt-2 text-center text-light-200 w-24 line-clamp-2">{actor.name}</p>
+                                        <p className="text-sm text-center text-gray-100 w-24 line-clamp-2">{actor.character}</p>
                                     </div>
                                 ))}
                             </div>
@@ -294,7 +294,9 @@ const MovieDetailsPage = () => {
                                                 alt={similarMovie.title}
                                                 className="w-24 h-24 rounded-lg object-cover"
                                             />
-                                            <p className="mt-2 text-center text-light-200">{similarMovie.title}</p>
+                                            <p className="mt-2 text-center text-light-200 w-24 line-clamp-2" title={similarMovie.title}>
+                                                {similarMovie.title}
+                                            </p>
                                         </div>
                                     ))}
                                 </div>
