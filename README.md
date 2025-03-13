@@ -1,7 +1,5 @@
 # 🎬 Matrix - The Ultimate Movie Experience  
 
-![Matrix Banner](https://source.unsplash.com/1600x600/?movie,cinema)  
-
 > A sleek and modern movie discovery platform powered by React & TMDB API.  
 
 ## 🚀 Live Demo  
