@@ -1,7 +1,5 @@
 # 🎬 Matrix - The Ultimate Movie Experience  
 
-> A sleek and modern movie discovery platform powered by React & TMDB API.  
-
 ## 🚀 Live Demo  
 🔗 [Check out the live site!](https://movie-archive-mauve.vercel.app/)  
 
