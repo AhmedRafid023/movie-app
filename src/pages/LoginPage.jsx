@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import { AuthContext } from '../context/AuthContext';
+import Spinner from "../components/Spinner.jsx";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ const LoginPage = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const {setLoggedIn, setUserName, setUserId} = useContext(AuthContext);
+    const [isLoading, setIsLoading] = useState(false);
 
     const LOGIN_API_BASE_URL = import.meta.env.MODE === 'development'
         ? import.meta.env.VITE_LOCAL_BASE_URL
@@ -19,6 +21,7 @@ const LoginPage = () => {
             setError('Please fill in all fields.');
             return;
         }
+        setIsLoading(true);
         try {
             const response = await fetch(`${LOGIN_API_BASE_URL}/auth/login`, {
                 method: 'POST',
@@ -37,6 +40,8 @@ const LoginPage = () => {
             navigate('/');
         } catch (error) {
             setError(error.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -72,9 +77,9 @@ const LoginPage = () => {
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-yellow-500 text-black py-2 rounded-lg hover:bg-yellow-600 transition duration-300 font-bold"
+                            className="w-full bg-yellow-500 text-black py-2 rounded-lg hover:bg-yellow-600 transition duration-300 font-bold flex justify-center items-center"
                         >
-                            Login
+                            {isLoading ? <Spinner /> : "Login"}
                         </button>
                     </form>
                     <p className="mt-4 text-gray-300">
