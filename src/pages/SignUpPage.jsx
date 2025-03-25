@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Spinner from "../components/Spinner.jsx";
 
 
 const SignUpPage = () => {
@@ -8,6 +9,7 @@ const SignUpPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     const REGISTER_API_BASE_URL = import.meta.env.MODE === 'development'
         ? import.meta.env.VITE_LOCAL_BASE_URL
@@ -21,7 +23,7 @@ const SignUpPage = () => {
             setError('Please fill in all fields.');
             return;
         }
-
+        setIsLoading(true);
         try {
             const response = await fetch(`${REGISTER_API_BASE_URL}/auth/register`, {
                 method: "POST",
@@ -37,6 +39,8 @@ const SignUpPage = () => {
             navigate('/login');
         } catch (err) {
             setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -82,9 +86,9 @@ const SignUpPage = () => {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-yellow-500 text-black py-2 rounded-lg hover:bg-yellow-600 transition duration-300 font-bold"
+                        className="w-full bg-yellow-500 text-black py-2 rounded-lg hover:bg-yellow-600 transition duration-300 font-bold flex justify-center items-center"
                     >
-                        Sign Up
+                        {isLoading ? <Spinner /> : "Sign up"}
                     </button>
                 </form>
                 <p className="mt-4 text-gray-300">
