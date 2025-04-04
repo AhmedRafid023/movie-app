@@ -5,7 +5,8 @@
 
 ## ✨ Features  
 ✅ Search & explore a vast collection of movies  
-✅ Detailed movie descriptions, ratings, and trailers  
+✅ Detailed movie descriptions, ratings, and trailers   
+✅ user watchlist    
 ✅ Smooth & dynamic UI with **Parallax scrolling**  
 ✅ **Fast & responsive** with Tailwind CSS  
 ✅ **Seamless navigation** using React Router  
