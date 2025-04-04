@@ -19,11 +19,13 @@ const Watchlist = () => {
 
     const fetchWatchlist = async () => {
         try {
+            setLoading(true);
+            setError(null);
             const token = localStorage.getItem('token');
             if(!token){
                 throw new Error('Token is missing');
             }
-            const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/${userId}`, {
+            const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
