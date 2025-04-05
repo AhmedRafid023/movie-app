@@ -67,13 +67,18 @@ const Watchlist = () => {
     // Remove an item from the watchlist
     const handleRemoveFromWatchlist = async (tmdbId, mediaType) => {
         try {
+            setLoading(true);
+            const token = localStorage.getItem('token');
+            if(!token){
+                throw new Error('Token is missing');
+            }
             const response = await fetch(`${WATCHLIST_API_BASE_URL}/watchlist/remove`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    user_id: userId,
                     tmdb_id: tmdbId,
                     media_type: mediaType,
                 }),
@@ -99,6 +104,8 @@ const Watchlist = () => {
         } catch (error) {
             console.error('Error removing from watchlist:', error);
             toast.error('Failed to remove from watchlist. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
