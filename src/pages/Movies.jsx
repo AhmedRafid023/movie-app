@@ -134,9 +134,9 @@ const Movies = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-dark-100 via-dark-100/80 to-transparent"></div>
                 <div className="relative z-10 container mx-auto px-4">
                     <div className="max-w-3xl">
-                        <h1 className="text-5xl font-bold mb-4">
+                        <p className="text-5xl font-bold mb-4">
                             {featuredContent?.title || 'Find Movies You Will Love'}
-                        </h1>
+                        </p>
                         <p className="text-light-200 text-lg mb-6">
                             {featuredContent?.overview ||
                                 'Explore a wide range of movies and discover your next favorite.'}

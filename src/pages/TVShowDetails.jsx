@@ -173,7 +173,7 @@ const TVShowDetails = () => {
                 {/* Content */}
                 <div className="relative z-10 container mx-auto px-4">
                     <div className="max-w-3xl">
-                        <h1 className="text-5xl font-bold mb-4">{tvShow.name}</h1>
+                        <p className="text-5xl font-bold mb-4">{tvShow.name}</p>
                         <p className="text-light-200 text-lg mb-6">{tvShow.tagline}</p>
                         {/* Metadata */}
                         <div className="flex flex-wrap gap-4">
