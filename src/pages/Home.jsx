@@ -27,7 +27,7 @@ const Home = () => {
             if (!response.ok) throw new Error('Could not fetch trending movies');
             const data = await response.json();
             setFeaturedContent(data.results[0]);
-            setTrendingMovies(data.results.slice(0, 10));
+            setTrendingMovies(data.results.slice(0, 20));
         } catch (error) {
             console.log(`Error fetching trending movies: ${error}`);
         }
@@ -38,7 +38,7 @@ const Home = () => {
             const response = await fetch(`${API_BASE_URL}/trending/tv/day?page=1`, API_OPTIONS);
             if (!response.ok) throw new Error('Could not fetch trending TV shows');
             const data = await response.json();
-            setTrendingTVShows(data.results.slice(0, 10));
+            setTrendingTVShows(data.results.slice(0, 20));
         } catch (error) {
             console.log(`Error fetching trending TV shows: ${error}`);
         }
@@ -49,7 +49,7 @@ const Home = () => {
             const response = await fetch(`${API_BASE_URL}/movie/top_rated?page=1`, API_OPTIONS);
             if (!response.ok) throw new Error('Could not fetch top rated movies');
             const data = await response.json();
-            setTopRatedMovies(data.results.slice(0, 10));
+            setTopRatedMovies(data.results.slice(0, 20));
         } catch (error) {
             console.log(`Error fetching top rated movies: ${error}`);
         }
@@ -60,7 +60,7 @@ const Home = () => {
             const response = await fetch(`${API_BASE_URL}/movie/upcoming?page=1`, API_OPTIONS);
             if (!response.ok) throw new Error('Could not fetch upcoming movies');
             const data = await response.json();
-            setUpcomingMovies(data.results.slice(0, 10));
+            setUpcomingMovies(data.results.slice(0, 20));
         } catch (error) {
             console.log(`Error fetching upcoming movies: ${error}`);
         }
