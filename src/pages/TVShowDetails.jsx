@@ -95,6 +95,7 @@ const TVShowDetails = () => {
 
     useEffect(() => {
         fetchTVShowDetails();
+        window.scrollTo(0, 0); // scroll to the top of the page
     }, [id]);
 
     useEffect(() => {
